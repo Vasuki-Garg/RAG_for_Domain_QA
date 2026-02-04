@@ -1,0 +1,46 @@
+# =========================
+# Colab: Run Streamlit app from GitHub + ngrok
+# =========================
+
+# 1) Clone repo
+!rm -rf RAG_for_Domain_QA
+!git clone https://github.com/Vasuki-Garg/RAG_for_Domain_QA.git
+%cd RAG_for_Domain_QA
+
+# 2) Install deps
+!pip -q install -r requirements.txt
+!pip -q install pyngrok
+
+# 3) Set secrets (DO NOT commit these anywhere)
+import os
+
+# >>>>>> EDIT THESE TWO LINES <<<<<<
+os.environ["OPENAI_API_KEY"] = "PASTE_OPENAI_KEY_HERE"
+os.environ["NGROK_AUTHTOKEN"] = "PASTE_NGROK_TOKEN_HERE"
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+# 4) Kill any prior processes (avoids port/tunnel conflicts)
+!pkill -f streamlit || true
+
+from pyngrok import ngrok
+try:
+    ngrok.kill()
+except Exception:
+    pass
+
+# 5) Start Streamlit (background)
+PORT = 8501
+!streamlit run app.py --server.port $PORT --server.address 0.0.0.0 \
+  --server.headless true --server.enableCORS false --server.enableXsrfProtection false \
+  > /content/streamlit.log 2>&1 &
+
+# 6) Sanity check: server responds locally
+!curl -s http://127.0.0.1:$PORT | head -n 5
+
+# 7) Start ngrok tunnel
+ngrok.set_auth_token(os.environ["NGROK_AUTHTOKEN"])
+public_url = ngrok.connect(PORT, "http")
+print("Open this URL:", public_url)
+
+# 8) (Optional) view logs if something fails
+print("\nIf the page doesn't load, check logs with:\n!tail -n 200 /content/streamlit.log\n")
