@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtual env
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Secrets / local config
+.env
+.streamlit/secrets.toml
+
+# App data (uploaded PDFs)
+pdfs/
+
+# Logs
+*.log
