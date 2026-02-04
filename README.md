@@ -1,4 +1,4 @@
-# PDF Chat (Domain-Specific QA) — Streamlit + LangChain
+# PDF Chat (Domain-Specific QA) — LangChain + Streamlit
 
 A Streamlit app that lets you upload PDFs, indexes them into an in-memory vector store, and answers questions using retrieval + an OpenAI chat model. Includes basic prompt-injection guardrails and shows source pages for transparency.
 
